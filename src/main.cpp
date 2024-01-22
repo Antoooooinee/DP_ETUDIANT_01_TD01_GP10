@@ -3,10 +3,10 @@
 #include <DHT.h>
 #include <DHT_U.h>
 
-#define DHTPIN 33   
-#define LED 26       
+#define DHTPIN 33     // Broche numérique connectée au capteur DHT
+#define LED 26       // Broche pour la LED (non utilisée dans cette étape)
 
-#define DHTTYPE    DHT11    
+#define DHTTYPE    DHT11     // Type de capteur DHT (DHT11, DHT22, ou DHT21)
 
 DHT_Unified dht(DHTPIN, DHTTYPE);
 
@@ -21,15 +21,9 @@ void setup() {
   sensor_t sensor;
   dht.temperature().getSensor(&sensor);
 
-
   delayMS = sensor.min_delay / 1000;
-}
-
-void loop() {
-  digitalWrite(LED, HIGH);  
 
   sensors_event_t event;
-  
   dht.temperature().getEvent(&event);
   if (isnan(event.temperature)) {
     Serial.println(F("Error reading temperature!"));
@@ -48,10 +42,14 @@ void loop() {
     Serial.println(F("%"));
   }
 
-  digitalWrite(LED, LOW); 
-  
-  
-  delay(delayMS);
-  esp_sleep_enable_timer_wakeup(delayMS * 1000);
+  digitalWrite(LED, HIGH);
+  delay(5000);
+  digitalWrite(LED, LOW);
+
+  esp_sleep_enable_timer_wakeup(5 * 1000000 - 500);
   esp_deep_sleep_start();
+}
+
+void loop() {
+  // loop vide
 }
